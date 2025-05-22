@@ -10,27 +10,41 @@ use Maatwebsite\Excel\Concerns\WithMapping;
 class SalesmanProgressExport implements FromCollection, WithHeadings, WithMapping
 {
     protected $salesmanId;
+    protected $branchId;
 
-    public function __construct($salesmanId = null)
+    /**
+     * Constructor.
+     * @param int|null $salesmanId Filter berdasarkan salesman tertentu
+     * @param int|null $branchId Filter berdasarkan cabang tertentu
+     */
+    public function __construct($salesmanId = null, $branchId = null)
     {
         $this->salesmanId = $salesmanId;
+        $this->branchId = $branchId;
     }
 
+    /**
+     * Ambil koleksi data salesman sesuai filter.
+     * @return \Illuminate\Support\Collection
+     */
     public function collection()
     {
         $query = User::where('role', 'salesman')->with(['branch', 'customers']);
 
         if ($this->salesmanId) {
             $query->where('id', $this->salesmanId);
+        } elseif ($this->branchId) {
+            $query->where('branch_id', $this->branchId);
         }
+        // Jika kedua parameter null, ambil semua salesman
 
         $salesmen = $query->get();
 
-        $this->data = $salesmen->map(function ($salesman) {
+        return $salesmen->map(function ($salesman) {
             $totalFollowUp = $salesman->customers->count();
             $totalSPK = $salesman->customers->where('progress', 'SPK')->count();
-            $totalPending = $salesman->customers->where('progress', 'Pending')->count();
-            $totalNonValid = $salesman->customers->where('progress', 'Invalid')->count();
+            $totalPending = $salesman->customers->where('progress', 'pending')->count();
+            $totalNonValid = $salesman->customers->where('progress', 'tidak valid')->count();
 
             return [
                 'salesman' => $salesman->name,
@@ -45,10 +59,11 @@ class SalesmanProgressExport implements FromCollection, WithHeadings, WithMappin
                 'nonValidPercentage' => $totalFollowUp > 0 ? round(($totalNonValid / $totalFollowUp) * 100, 2) : 0,
             ];
         });
-
-        return $this->data;
     }
 
+    /**
+     * Mapping setiap baris data ke format array untuk Excel.
+     */
     public function map($row): array
     {
         return [
@@ -65,6 +80,9 @@ class SalesmanProgressExport implements FromCollection, WithHeadings, WithMappin
         ];
     }
 
+    /**
+     * Judul kolom untuk Excel.
+     */
     public function headings(): array
     {
         return [
