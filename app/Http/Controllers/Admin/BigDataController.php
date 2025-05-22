@@ -70,6 +70,7 @@ class BigDataController extends Controller
             'progress' => 'required|string|max:255',
             'alasan' => 'nullable|string|max:255',
             'old_salesman' => 'nullable|string|max:255',
+            'agama' => 'nullable|string|max:255',
         ]);
 
         $customers = Customer::create([
@@ -95,6 +96,7 @@ class BigDataController extends Controller
             'progress' => $validated['progress'],
             'alasan' => $validated['alasan'],
             'old_salesman' => $validated['old_salesman'],
+            'agama' => $validated['agama'],
         ]);
 
         return redirect()->route('admin.bigdata')->with('success', 'Data berhasil ditambahkan!');
