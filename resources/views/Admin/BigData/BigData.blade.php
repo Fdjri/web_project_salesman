@@ -188,9 +188,15 @@
                             <th id="col-kota"
                                 class="p-2 sm:p-3 border-b border-gray-200 dark:border-gray-500 font-semibold text-left">
                                 Kota</th>
+                            <th id="col-kecamatan"
+                                class="p-2 sm:p-3 border-b border-gray-200 dark:border-gray-500 font-semibold text-left">
+                                Kecamatan</th>
                             <th id="col-tanggal_lahir"
                                 class="p-2 sm:p-3 border-b border-gray-200 dark:border-gray-500 font-semibold text-left">
                                 Tgl. Lahir</th>
+                            <th id="col-agama"
+                                class="p-2 sm:p-3 border-b border-gray-200 dark:border-gray-500 font-semibold text-left">
+                                Agama</th>
                             <th id="col-kendaraan"
                                 class="p-2 sm:p-3 border-b border-gray-200 dark:border-gray-500 font-semibold text-left">
                                 Jenis Kendaraan</th>
@@ -218,7 +224,9 @@
                             <td class="p-2 sm:p-3 border-b border-gray-200 dark:border-gray-600">{{ $customers->branch->name ?? '' }}</td>
                             <td class="p-2 sm:p-3 border-b border-gray-200 dark:border-gray-600">{{ $customers->nama }}</td>
                             <td class="p-2 sm:p-3 border-b border-gray-200 dark:border-gray-600">{{ $customers->kota }}</td>
+                            <td class="p-2 sm:p-3 border-b border-gray-200 dark:border-gray-600">{{ $customers->kecamatan }}</td>
                             <td class="p-2 sm:p-3 border-b border-gray-200 dark:border-gray-600">{{ $customers->tanggal_lahir }}</td>
+                            <td class="p-2 sm:p-3 border-b border-gray-200 dark:border-gray-600">{{ $customers->agama }}</td>
                             <td class="p-2 sm:p-3 border-b border-gray-200 dark:border-gray-600">{{ $customers->model_mobil }}</td>
                             <td class="p-2 sm:p-3 border-b border-gray-200 dark:border-gray-600">{{ $customers->jenis_pelanggan }}</td>
                             <td class="p-2 sm:p-3 border-b border-gray-200 dark:border-gray-600">{{ $customers->old_salesman }}

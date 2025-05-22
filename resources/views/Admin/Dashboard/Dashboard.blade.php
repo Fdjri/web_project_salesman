@@ -187,9 +187,9 @@
                                 <th class="p-3 sm:p-4 border-b border-gray-200 dark:border-gray-500 font-semibold">
                                     Nama</th>
                                 <th class="p-3 sm:p-4 border-b border-gray-200 dark:border-gray-500 font-semibold">
-                                    Follow Up</th>
-                                <th class="p-3 sm:p-4 border-b border-gray-200 dark:border-gray-500 font-semibold">
                                     Saved</th>
+                                <th class="p-3 sm:p-4 border-b border-gray-200 dark:border-gray-500 font-semibold">
+                                    Follow Up</th>
                             </tr>
                         </thead>
                         <tbody id="salesmanTableBody">
@@ -208,10 +208,10 @@
                                         {{ $salesman['total_customers'] }}
                                     </td>
                                     <td class="p-3 sm:p-4 border-b border-gray-200 dark:border-gray-500">
-                                        {{ $salesman['follow_up_count'] }}
+                                        {{ $salesman['saved_count'] }}
                                     </td>
                                     <td class="p-3 sm:p-4 border-b border-gray-200 dark:border-gray-500">
-                                        {{ $salesman['saved_count'] }}
+                                        {{ $salesman['follow_up_count'] }}
                                     </td>
                                 </tr>
                             @endforeach
