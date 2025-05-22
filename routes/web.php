@@ -100,4 +100,5 @@ Route::middleware(['auth', 'role:salesman'])->prefix('salesman')->name('salesman
 
     // laporan
     Route::get('/laporan', [SalesmanLaporanController::class, 'index'])->name('laporan');
+    Route::get('/laporan/export', [SalesmanLaporanController::class, 'export'])->name('laporan.export');
 });
