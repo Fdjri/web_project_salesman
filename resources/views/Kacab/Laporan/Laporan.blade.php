@@ -30,7 +30,7 @@
                     <h3 class="text-lg font-semibold text-gray-800 dark:text-white">Laporan Salesman</h3>
 
                     <!-- Upload Excel Button -->
-                    <form action="{{ route('kacab.laporan.export') }}" method="POST">
+                    <form action="{{ route('kacab.laporan.export') }}" method="GET">
                         @csrf
                         <button
                             class="flex items-center justify-center bg-green-500 text-white py-2 px-4 rounded-lg text-sm w-full md:w-auto">
