@@ -6,20 +6,26 @@ use App\Models\User;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
-use Illuminate\Support\Collection;
 
 class SalesmanProgressExport implements FromCollection, WithHeadings, WithMapping
 {
-    protected $data;
+    protected $salesmanId;
+
+    public function __construct($salesmanId = null)
+    {
+        $this->salesmanId = $salesmanId;
+    }
 
     public function collection()
     {
-        // Ambil user dengan role salesman beserta relasi
-        $salesmen = User::where('role', 'salesman')
-            ->with(['branch', 'customers'])
-            ->get();
+        $query = User::where('role', 'salesman')->with(['branch', 'customers']);
 
-        // Hitung statistik dan simpan dalam $this->data untuk digunakan di map()
+        if ($this->salesmanId) {
+            $query->where('id', $this->salesmanId);
+        }
+
+        $salesmen = $query->get();
+
         $this->data = $salesmen->map(function ($salesman) {
             $totalFollowUp = $salesman->customers->count();
             $totalSPK = $salesman->customers->where('progress', 'SPK')->count();
