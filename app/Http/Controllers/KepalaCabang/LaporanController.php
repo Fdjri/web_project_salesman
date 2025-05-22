@@ -5,6 +5,8 @@ namespace App\Http\Controllers\KepalaCabang;
 use App\Http\Controllers\Controller;
 use App\Models\Branch;
 use App\Models\User;
+use App\Exports\SalesmanProgressExport;
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Http\Request;
 
 class LaporanController extends Controller
@@ -107,4 +109,14 @@ class LaporanController extends Controller
     {
         //
     }
+
+    public function export()
+    {
+        $user = auth()->user();
+
+        $branchId = $user->branch_id;
+
+        return Excel::download(new SalesmanProgressExport(null, $branchId), 'laporan_cabang_'.date('Ymd_His').'.xlsx');
+    }
+
 }

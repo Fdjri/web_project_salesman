@@ -118,7 +118,8 @@ class LaporanController extends Controller
 
     public function export()
     {
-        $salesmanId = auth()->user()->id;
-        return Excel::download(new SalesmanProgressExport($salesmanId), 'laporan_salesman.xlsx');
+        $salesmanId = auth()->id();
+
+        return Excel::download(new SalesmanProgressExport($salesmanId), 'laporan_salesman_'.auth()->user()->name.'_'.date('Ymd_His').'.xlsx');
     }
 }

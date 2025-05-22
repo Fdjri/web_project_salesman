@@ -104,6 +104,6 @@ class LaporanController extends Controller
 
     public function export()
     {
-        return Excel::download(new SalesmanProgressExport, 'salesman_progress.xlsx');
+        return Excel::download(new SalesmanProgressExport(), 'laporan_salesman_'.date('Ymd_His').'.xlsx');
     }
 }
