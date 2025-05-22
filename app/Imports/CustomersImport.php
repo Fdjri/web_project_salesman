@@ -23,11 +23,12 @@ class CustomersImport implements ToModel, WithHeadingRow, SkipsEmptyRows
         // Cari cabang berdasarkan nama (case-insensitive)
         $branch = Branch::where('name', trim($row['cabang'] ?? ''))->first();
         if (! $branch) {
-            return null; // atau throw exception sesuai kebutuhan
+            return null; // bisa juga throw exception jika perlu
         }
 
-        // Cari salesman, bisa null kalau tidak ditemukan
-        $salesman = User::where('name', trim($row['salesman'] ?? ''))->first();
+        // Cari salesman berdasarkan nama, bisa null jika tidak ditemukan atau kosong
+        $salesmanName = trim($row['salesman'] ?? '');
+        $salesman = $salesmanName !== '' ? User::where('name', $salesmanName)->first() : null;
 
         // Konversi tanggal lahir (Excel date atau string)
         $tanggalLahir = null;
@@ -38,7 +39,7 @@ class CustomersImport implements ToModel, WithHeadingRow, SkipsEmptyRows
                 : Carbon::parse($tl);
         }
 
-        // Konversi tanggal gatepass
+        // Konversi tanggal gatepass (Excel date atau string)
         $tanggalGatepass = null;
         if (! empty($row['tanggal_gatepass'])) {
             $tg = $row['tanggal_gatepass'];
@@ -54,21 +55,18 @@ class CustomersImport implements ToModel, WithHeadingRow, SkipsEmptyRows
         // Validasi tipe pelanggan (enum 'first buyer','replacement','additional')
         $rawTipe = strtolower(trim($row['tipe_pelanggan'] ?? ''));
         $allowedTipe = ['first buyer','replacement','additional'];
-        $tipePelanggan = in_array($rawTipe, $allowedTipe, true)
-            ? $rawTipe
-            : null;
+        $tipePelanggan = in_array($rawTipe, $allowedTipe, true) ? $rawTipe : null;
 
         // Validasi jenis pelanggan (enum 'retail','fleet')
         $rawJenis = strtolower(trim($row['jenis_pelanggan'] ?? ''));
         $allowedJenis = ['retail','fleet'];
-        $jenisPelanggan = in_array($rawJenis, $allowedJenis, true)
-            ? $rawJenis
-            : null;
+        $jenisPelanggan = in_array($rawJenis, $allowedJenis, true) ? $rawJenis : null;
 
-        // Validasi progress (enum 'DO','SPK','pending','reject','tidak valid')
+        // Validasi progress (enum 'DO','SPK','pending','reject','tidak valid'), bisa kosong (null)
         $rawProgress = strtolower(trim($row['progress'] ?? ''));
         $allowedProgress = ['do','spk','pending','reject','tidak valid'];
-        if (in_array($rawProgress, $allowedProgress, true)) {
+        $progress = null;
+        if ($rawProgress !== '' && in_array($rawProgress, $allowedProgress, true)) {
             $progressMap = [
                 'do'          => 'DO',
                 'spk'         => 'SPK',
@@ -77,45 +75,36 @@ class CustomersImport implements ToModel, WithHeadingRow, SkipsEmptyRows
                 'tidak valid' => 'tidak valid',
             ];
             $progress = $progressMap[$rawProgress];
-        } else {
-            $progress = null;
         }
 
-        // Validasi agama (contoh enum sederhana, sesuaikan dengan kebutuhan)
-        $rawAgama = trim($row['agama'] ?? '');
-        $allowedAgama = ['islam', 'kristen', 'katolik', 'hindu', 'budha', 'konghucu'];
-        $agama = in_array(strtolower($rawAgama), $allowedAgama, true)
-            ? ucfirst(strtolower($rawAgama))
-            : null;
-
-        // Ambil saved dari row, default 0 jika kosong atau bukan angka
-        $saved = is_numeric($row['saved'] ?? null) ? (int)$row['saved'] : 0;
+        // Saved selalu 0 saat import
+        $saved = 0;
 
         return new Customer([
             'branch_id'        => $branch->id,
             'salesman_id'      => $salesman?->id,
             'nama'             => trim($row['nama'] ?? ''),
-            'alamat'           => trim($row['alamat'] ?? ''),
+            'alamat'           => trim($row['alamat'] ?? null),
             'nomor_hp_1'       => trim($row['nomor_hp_1'] ?? ''),
-            'nomor_hp_2'       => trim($row['nomor_hp_2'] ?? ''),
-            'kelurahan'        => trim($row['kelurahan'] ?? ''),
-            'kecamatan'        => trim($row['kecamatan'] ?? ''),
-            'kota'             => trim($row['kota'] ?? ''),
+            'nomor_hp_2'       => trim($row['nomor_hp_2'] ?? null),
+            'kelurahan'        => trim($row['kelurahan'] ?? null),
+            'kecamatan'        => trim($row['kecamatan'] ?? null),
+            'kota'             => trim($row['kota'] ?? null),
             'tanggal_lahir'    => $tanggalLahir,
             'jenis_kelamin'    => $jenisKelamin,
+            'agama'            => trim($row['agama'] ?? null),
             'tipe_pelanggan'   => $tipePelanggan,
             'jenis_pelanggan'  => $jenisPelanggan,
-            'pekerjaan'        => trim($row['pekerjaan'] ?? ''),
-            'tenor'            => is_numeric($row['tenor'] ?? '') ? (int)$row['tenor'] : null,
+            'pekerjaan'        => trim($row['pekerjaan'] ?? null),
+            'tenor'            => is_numeric($row['tenor'] ?? null) ? (int) $row['tenor'] : null,
             'tanggal_gatepass' => $tanggalGatepass,
-            'model_mobil'      => trim($row['model_mobil'] ?? ''),
-            'nomor_rangka'     => trim($row['nomor_rangka'] ?? ''),
-            'sumber_data'      => trim($row['sumber_data'] ?? ''),
+            'model_mobil'      => trim($row['model_mobil'] ?? null),
+            'nomor_rangka'     => trim($row['nomor_rangka'] ?? null),
+            'sumber_data'      => trim($row['sumber_data'] ?? null),
             'progress'         => $progress,
             'saved'            => $saved,
-            'alasan'           => trim($row['alasan'] ?? ''),
-            'old_salesman'     => trim($row['old_salesman'] ?? ''),
-            'agama'            => $agama,
+            'alasan'           => trim($row['alasan'] ?? null),
+            'old_salesman'     => trim($row['old_salesman'] ?? null),
         ]);
     }
 }
