@@ -66,7 +66,7 @@ Route::middleware(['auth', 'role:kepala_cabang'])->prefix('kepala_cabang')->name
 
     // laporan
     Route::get('/laporan', [KepalaCabangLaporanController::class, 'index'])->name('laporan'); // Laporan
-    Route::post('/laporan/export', [LaporanController::class, 'export'])->name('laporan.export');
+    Route::get('/laporan/export', [KepalaCabangLaporanController::class, 'export'])->name('laporan.export');
 
     // manage user
     Route::get('/user-management', [KepalaCabangUserManagementController::class, 'index'])->name('usermanagement'); // user management
