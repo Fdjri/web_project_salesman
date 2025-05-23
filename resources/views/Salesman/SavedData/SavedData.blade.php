@@ -181,6 +181,9 @@
                             <th id="col-kendaraan"
                                 class="p-2 sm:p-3 border-b border-gray-200 dark:border-gray-500 font-semibold text-left">
                                 Jenis Kendaraan</th>
+                            <th id="col-lease_name"
+                                class="p-2 sm:p-3 border-b border-gray-200 dark:border-gray-500 font-semibold text-left">
+                                Nama Leasing</th>
                             <th id="col-sales"
                                 class="p-2 sm:p-3 border-b border-gray-200 dark:border-gray-500 font-semibold text-left">
                                 Salesman</th>
@@ -224,6 +227,10 @@
                             <!-- Kolom 5: Jenis Kendaraan -->
                             <td class="p-2 sm:p-3 border-b border-gray-200 dark:border-gray-600">
                                 {{ $customer->model_mobil }}
+                            </td>
+
+                            <!-- Kolom 6: Agama -->
+                            <td class="p-2 sm:p-3 border-b border-gray-200 dark:border-gray-600">{{ $customer->lease_name }}
                             </td>
 
                             <!-- Kolom 6: Sales -->
@@ -282,6 +289,7 @@
                                         data-no_telepon="{{ $customer->nomor_hp_1 }}"
                                         data-no_telepon_update="{{ $customer->nomor_hp_2 }}"
                                         data-old_salesman="{{ $customer->old_salesman }}"
+                                        data-lease_name="{{ $customer->lease_name }}"
                                         class="px-2 py-1.5 text-xs sm:text-sm flex items-center gap-1 bg-blue-50 hover:bg-blue-100 dark:bg-blue-900/50 dark:hover:bg-blue-900 text-blue-600 dark:text-blue-300 rounded-md border border-blue-200 dark:border-blue-700">
                                         <span class="material-symbols-outlined text-sm">info</span>
                                     </button>
@@ -526,6 +534,13 @@
                         <label for="tenor"
                             class="block text-sm font-medium text-gray-700 dark:text-gray-300">Tenor</label>
                         <input disabled type="text" id="tenor" name="tenor"
+                            class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-gray-700 dark:text-gray-200 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-800 dark:focus:ring-indigo-500 dark:focus:border-indigo-500"
+                            placeholder="N/A">
+                    </div>
+                    <div class="mb-4">
+                        <label for="lease_name"
+                            class="block text-sm font-medium text-gray-700 dark:text-gray-300">Nama Leasing</label>
+                        <input disabled type="text" id="lease_name" name="lease_name"
                             class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-gray-700 dark:text-gray-200 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-800 dark:focus:ring-indigo-500 dark:focus:border-indigo-500"
                             placeholder="N/A">
                     </div>

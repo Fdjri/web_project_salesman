@@ -711,6 +711,7 @@
         document.getElementById("no_telepon").value = button.dataset.no_telepon || '';
         document.getElementById("no_telepon_update").value = button.dataset.no_telepon_update || '';
         document.getElementById("update-old_salesman").value = button.dataset.old_salesman || '';
+        document.getElementById("lease_name").value = button.dataset.lease_name || '';
 
         // Show the modal by removing the hidden class
         document.getElementById('TampilDataModal').classList.remove('hidden');

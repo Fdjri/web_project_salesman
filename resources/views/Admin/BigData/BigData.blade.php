@@ -564,6 +564,12 @@
                             placeholder="N/A">
                     </div>
                     <div class="mb-4">
+                        <label for="lease_name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Nama Leasing</label>
+                        <input disabled type="text" id="lease_name" name="lease_name"
+                            class="mt-1 block w-full px-3 py-2 border rounded-md text-gray-700 dark:text-gray-200 dark:bg-gray-800"
+                            placeholder="N/A">
+                    </div>
+                    <div class="mb-4">
                         <label for="jenis_kendaraan"
                             class="block text-sm font-medium text-gray-700 dark:text-gray-300">Jenis
                             Kendaraan</label>
@@ -712,13 +718,9 @@
                     <div class="mb-4">
                         <label for="agama"
                             class="block text-sm font-medium text-gray-700 dark:text-gray-300">Agama</label>
-                        <select id="agama" name="agama"
-                            class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-gray-700 dark:text-gray-200 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-800 dark:focus:ring-indigo-500 dark:focus:border-indigo-500">
-                            <option value="">Pilih Agama</option>
-                            @foreach($agama as $item)
-                            <option value="{{ $item }}">{{ $item }}</option>
-                            @endforeach
-                        </select>
+                        <input type="text" id="agama" name="agama"
+                            class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-gray-700 dark:text-gray-200 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-800 dark:focus:ring-indigo-500 dark:focus:border-indigo-500"
+                            placeholder="agama">
                     </div>
                     <div class="mb-4">
                         <label for="tanggal_lahir" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Tgl.
@@ -808,6 +810,14 @@
                             class="block text-sm font-medium text-gray-700 dark:text-gray-300">Old
                             Salesman</label>
                         <input type="text" id="old_salesman" name="old_salesman"
+                            class=" block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-gray-700 dark:text-gray-200 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-800 dark:focus:ring-indigo-500 dark:focus:border-indigo-500"
+                            placeholder="(optional)">
+                    </div>
+                    <div>
+                        <label for="lease_name"
+                            class="block text-sm font-medium text-gray-700 dark:text-gray-300">Nama
+                            Leasing</label>
+                        <input type="text" id="lease_name" name="lease_name"
                             class=" block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-gray-700 dark:text-gray-200 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-800 dark:focus:ring-indigo-500 dark:focus:border-indigo-500"
                             placeholder="(optional)">
                     </div>

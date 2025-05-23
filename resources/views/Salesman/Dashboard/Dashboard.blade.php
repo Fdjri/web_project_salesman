@@ -145,6 +145,9 @@
                                 <th id="col-salesman"
                                     class="p-2 sm:p-3 border-b border-gray-200 dark:border-gray-500 font-semibold text-left">
                                     Salesman</th>
+                                <th id="col-lease_name"
+                                    class="p-2 sm:p-3 border-b border-gray-200 dark:border-gray-500 font-semibold text-left">
+                                    Nama Leasing</th>
                                 <th id="col-jenis_pelanggan"
                                     class="p-2 sm:p-3 border-b border-gray-200 dark:border-gray-500 font-semibold text-left">
                                     Jenis Pelanggan</th>
@@ -189,6 +192,11 @@
                                     <!-- Kolom 7: Salesman -->
                                     <td class="p-2 sm:p-3 border-b border-gray-200 dark:border-gray-600">
                                         {{ $customer->old_salesman }}
+                                    </td>
+
+                                    <!-- Kolom 7: Salesman -->
+                                    <td class="p-2 sm:p-3 border-b border-gray-200 dark:border-gray-600">
+                                        {{ $customer->lease_name }}
                                     </td>
 
                                     <!-- Kolom 7: jenis pelanggan -->
