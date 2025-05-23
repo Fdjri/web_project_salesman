@@ -47,9 +47,10 @@ class BigDataController extends Controller
      */
     public function store(Request $request)
     {
+        // Validasi input, branch_name sebagai nama cabang
         $validated = $request->validate([
-            'branch_id' => 'required|string|max:255',
-            'salesman_id' => 'nullable|exists:user,id',
+            'branch_name' => 'required|string|max:255',
+            'salesman_id' => 'nullable|exists:users,id',
             'nama' => 'required|string|max:255',
             'alamat' => 'nullable|string|max:255',
             'nomor_hp_1' => 'nullable|string|max:255',
@@ -59,49 +60,38 @@ class BigDataController extends Controller
             'kota' => 'nullable|string|max:255',
             'tanggal_lahir' => 'nullable|date',
             'jenis_kelamin' => 'nullable|string|in:L,P',
-            'tipe_pelanggan' => 'nullable|string|max:255',
-            'jenis_pelanggan' => 'nullable|string|max:255',
+            'tipe_pelanggan' => 'nullable|string|in:first buyer,replacement,additional',
+            'jenis_pelanggan' => 'nullable|string|in:retail,fleet',
             'pekerjaan' => 'nullable|string|max:255',
             'tenor' => 'nullable|integer',
             'tanggal_gatepass' => 'nullable|date',
             'model_mobil' => 'nullable|string|max:255',
             'nomor_rangka' => 'nullable|string|max:255',
             'sumber_data' => 'nullable|string|max:255',
-            'progress' => 'required|string|max:255',
+            'progress' => 'required|string|in:DO,SPK,pending,reject,tidak valid',
             'alasan' => 'nullable|string|max:255',
             'old_salesman' => 'nullable|string|max:255',
             'agama' => 'nullable|string|max:255',
+            'lease_name' => 'nullable|string|max:255',
         ]);
 
-        $customers = Customer::create([
-            'branch_id' => $validated['branch_id'],
-            'salesman_id' => $validated['salesman_id'],
-            'nama' => $validated['nama'],
-            'alamat' => $validated['alamat'],
-            'nomor_hp_1' => $validated['nomor_hp_1'],
-            'nomor_hp_2' => $validated['nomor_hp_2'],
-            'kelurahan' => $validated['kelurahan'],
-            'kecamatan' => $validated['kecamatan'],
-            'kota' => $validated['kota'],
-            'tanggal_lahir' => $validated['tanggal_lahir'],
-            'jenis_kelamin' => $validated['jenis_kelamin'],
-            'tipe_pelanggan' => $validated['tipe_pelanggan'],
-            'jenis_pelanggan' => $validated['jenis_pelanggan'],
-            'pekerjaan' => $validated['pekerjaan'],
-            'tenor' => $validated['tenor'],
-            'tanggal_gatepass' => $validated['tanggal_gatepass'],
-            'model_mobil' => $validated['model_mobil'],
-            'nomor_rangka' => $validated['nomor_rangka'],
-            'sumber_data' => $validated['sumber_data'],
-            'progress' => $validated['progress'],
-            'alasan' => $validated['alasan'],
-            'old_salesman' => $validated['old_salesman'],
-            'agama' => $validated['agama'],
-        ]);
+        // Cari branch berdasarkan nama
+        $branch = Branch::where('name', $validated['branch_name'])->first();
+
+        if (!$branch) {
+            return back()->withErrors(['branch_name' => 'Cabang tidak ditemukan'])->withInput();
+        }
+
+        // Siapkan data untuk simpan, ganti 'branch_name' dengan 'branch_id'
+        $data = $validated;
+        $data['branch_id'] = $branch->id;
+        unset($data['branch_name']); // hapus karena tidak ada di DB
+
+        // Simpan data customer
+        Customer::create($data);
 
         return redirect()->route('admin.bigdata')->with('success', 'Data berhasil ditambahkan!');
     }
-
 
     /**
      * Display the specified resource.
