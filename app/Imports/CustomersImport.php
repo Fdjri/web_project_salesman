@@ -23,10 +23,10 @@ class CustomersImport implements ToModel, WithHeadingRow, SkipsEmptyRows
         // Cari cabang berdasarkan nama (case-insensitive)
         $branch = Branch::where('name', trim($row['cabang'] ?? ''))->first();
         if (! $branch) {
-            return null; // bisa juga throw exception jika perlu
+            return null; // Bisa juga throw exception kalau perlu
         }
 
-        // Cari salesman berdasarkan nama, bisa null jika tidak ditemukan atau kosong
+        // Cari salesman berdasarkan nama, bisa null jika kosong atau tidak ditemukan
         $salesmanName = trim($row['salesman'] ?? '');
         $salesman = $salesmanName !== '' ? User::where('name', $salesmanName)->first() : null;
 
@@ -52,19 +52,19 @@ class CustomersImport implements ToModel, WithHeadingRow, SkipsEmptyRows
         $rawJk = strtoupper(trim($row['jenis_kelamin'] ?? ''));
         $jenisKelamin = in_array($rawJk, ['L', 'P'], true) ? $rawJk : null;
 
-        // Validasi tipe pelanggan (enum 'first buyer','replacement','additional')
+        // Validasi tipe pelanggan (enum 'first buyer', 'replacement', 'additional')
         $rawTipe = strtolower(trim($row['tipe_pelanggan'] ?? ''));
-        $allowedTipe = ['first buyer','replacement','additional'];
+        $allowedTipe = ['first buyer', 'replacement', 'additional'];
         $tipePelanggan = in_array($rawTipe, $allowedTipe, true) ? $rawTipe : null;
 
-        // Validasi jenis pelanggan (enum 'retail','fleet')
+        // Validasi jenis pelanggan (enum 'retail', 'fleet')
         $rawJenis = strtolower(trim($row['jenis_pelanggan'] ?? ''));
-        $allowedJenis = ['retail','fleet'];
+        $allowedJenis = ['retail', 'fleet'];
         $jenisPelanggan = in_array($rawJenis, $allowedJenis, true) ? $rawJenis : null;
 
-        // Validasi progress (enum 'DO','SPK','pending','reject','tidak valid'), bisa kosong (null)
+        // Validasi progress (enum 'DO', 'SPK', 'pending', 'reject', 'tidak valid'), bisa null
         $rawProgress = strtolower(trim($row['progress'] ?? ''));
-        $allowedProgress = ['do','spk','pending','reject','tidak valid'];
+        $allowedProgress = ['do', 'spk', 'pending', 'reject', 'tidak valid'];
         $progress = null;
         if ($rawProgress !== '' && in_array($rawProgress, $allowedProgress, true)) {
             $progressMap = [
@@ -105,6 +105,7 @@ class CustomersImport implements ToModel, WithHeadingRow, SkipsEmptyRows
             'saved'            => $saved,
             'alasan'           => trim($row['alasan'] ?? null),
             'old_salesman'     => trim($row['old_salesman'] ?? null),
+            'lease_name'       => trim($row['lease_name'] ?? null),
         ]);
     }
 }
