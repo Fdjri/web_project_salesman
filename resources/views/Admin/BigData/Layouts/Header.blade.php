@@ -714,6 +714,8 @@
         document.getElementById("no_rangka").value = button.dataset.nomor_rangka || '';
         document.getElementById("no_telepon").value = button.dataset.no_telepon || '';
         document.getElementById("no_telepon_update").value = button.dataset.no_telepon_update || '';
+        document.getElementById("old_salesman").value = button.dataset.old_salesman || '';
+        document.getElementById("lease_name").value = button.dataset.lease_name || '';
 
         // Tampilkan modal
         document.getElementById("TampilDataModal").classList.remove("hidden");
