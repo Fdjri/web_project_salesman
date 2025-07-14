@@ -97,7 +97,7 @@
                             <tr class="bg-gray-100 dark:bg-gray-700">
                                 <th id="col-no"
                                     class="p-2 sm:p-3 border-b border-gray-200 dark:border-gray-500 font-semibold text-left">
-                                    No</th>
+                                    Cabang</th>
                                 <th id="col-salesman"
                                     class="p-2 sm:p-3 border-b border-gray-200 dark:border-gray-500 font-semibold text-left">
                                     Salesman</th>
@@ -125,50 +125,62 @@
                             </tr>
                         </thead>
                         <tbody id="SalesmanProgressTableBody">
-                            <tr class="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600">
-                                <!-- Kolom 1: No -->
-                                <td class="p-2 sm:p-3 border-b border-gray-200 dark:border-gray-600">{{ 1 }}</td>
+                            {{-- Pastikan variabel $salesmanProgress ada sebelum ditampilkan --}}
+                            @if(isset($salesmanProgress))
+                                <tr class="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                    <!-- Kolom 2: Cabang -->
+                                    <td class="p-2 sm:p-3 border-b border-gray-200 dark:border-gray-600 text-left">
+                                        {{ $salesmanProgress['branch'] }}
+                                    </td>
 
-                                <!-- Kolom 3: Salesman -->
-                                <td class="p-2 sm:p-3 border-b border-gray-200 dark:border-gray-600">
-                                    {{ $salesmanProgress['salesman'] }}
-                                </td>
+                                    <!-- Kolom 3: Nama Salesman -->
+                                    <td class="p-2 sm:p-3 border-b border-gray-200 dark:border-gray-600 text-left">
+                                        {{ $salesmanProgress['salesman'] }}
+                                    </td>
 
-                                <!-- Kolom 4: Total Follow Up -->
-                                <td class="p-2 sm:p-3 border-b border-gray-200 dark:border-gray-600">
-                                    {{ $salesmanProgress['totalFollowUp'] }}
-                                </td>
+                                    <!-- Kolom 4: Total Follow Up -->
+                                    <td class="p-2 sm:p-3 border-b border-gray-200 dark:border-gray-600 text-left">
+                                        {{ $salesmanProgress['totalFollowUp'] }}
+                                    </td>
 
-                                <!-- Kolom 5: Total Kontak -->
-                                <td class="p-2 sm:p-3 border-b border-gray-200 dark:border-gray-600">
-                                    {{ $salesmanProgress['totalFollowUp'] }} <!-- Assuming this is the correct value -->
-                                </td>
+                                    <!-- Kolom 5: Total Kontak -->
+                                    <td class="p-2 sm:p-3 border-b border-gray-200 dark:border-gray-600 text-left">
+                                        {{ $salesmanProgress['totalKontak'] }}
+                                    </td>
 
-                                <!-- Kolom 6: Total Kontak Invalid -->
-                                <td class="p-2 sm:p-3 border-b border-gray-200 dark:border-gray-600">
-                                    {{ $salesmanProgress['totalNonValid'] }}
-                                </td>
+                                    <!-- Kolom 6: Total Kontak Invalid -->
+                                    <td class="p-2 sm:p-3 border-b border-gray-200 dark:border-gray-600 text-left">
+                                        {{ $salesmanProgress['totalNonValid'] }}
+                                    </td>
 
-                                <!-- Kolom 7: Total Progress (%) -->
-                                <td class="p-2 sm:p-3 border-b border-gray-200 dark:border-gray-600">
-                                    {{ $salesmanProgress['progressPercentage'] }}%
-                                </td>
+                                    <!-- Kolom 7: Total Progress (%) -->
+                                    <td class="p-2 sm:p-3 border-b border-gray-200 dark:border-gray-600 text-left">
+                                        {{ $salesmanProgress['progressPercentage'] }}%
+                                    </td>
 
-                                <!-- Kolom 8: Total SPK (%) -->
-                                <td class="p-2 sm:p-3 border-b border-gray-200 dark:border-gray-600">
-                                    {{ $salesmanProgress['spkPercentage'] }}%
-                                </td>
+                                    <!-- Kolom 8: Total SPK (%) -->
+                                    <td class="p-2 sm:p-3 border-b border-gray-200 dark:border-gray-600 text-left">
+                                        {{ $salesmanProgress['spkPercentage'] }}%
+                                    </td>
 
-                                <!-- Kolom 9: Total Pending (%) -->
-                                <td class="p-2 sm:p-3 border-b border-gray-200 dark:border-gray-600">
-                                    {{ $salesmanProgress['pendingPercentage'] }}%
-                                </td>
+                                    <!-- Kolom 9: Total Pending (%) -->
+                                    <td class="p-2 sm:p-3 border-b border-gray-200 dark:border-gray-600 text-left">
+                                        {{ $salesmanProgress['pendingPercentage'] }}%
+                                    </td>
 
-                                <!-- Kolom 10: Total Non-valid (%) -->
-                                <td class="p-2 sm:p-3 border-b border-gray-200 dark:border-gray-600">
-                                    {{ $salesmanProgress['nonValidPercentage'] }}%
-                                </td>
-                            </tr>
+                                    <!-- Kolom 10: Total Non-valid (%) -->
+                                    <td class="p-2 sm:p-3 border-b border-gray-200 dark:border-gray-600 text-left">
+                                        {{ $salesmanProgress['nonValidPercentage'] }}%
+                                    </td>
+                                </tr>
+                            @else
+                                {{-- Pesan jika data tidak ditemukan --}}
+                                <tr>
+                                    <td colspan="10" class="p-4 text-center text-gray-500 dark:text-gray-400">
+                                        Data laporan tidak tersedia.
+                                    </td>
+                                </tr>
+                            @endif
                         </tbody>
                     </table>
                 </div>

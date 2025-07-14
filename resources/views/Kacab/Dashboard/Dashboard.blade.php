@@ -160,28 +160,35 @@
                             </tr>
                         </thead>
                         <tbody id="salesmanTableBody">
-                            @foreach($salesman_goals as $index => $salesman)
-                                <tr
-                                    class="border-b border-gray-200 dark:border-gray-500 hover:bg-gray-50 dark:hover:bg-gray-600">
-                                    <td class="p-3 sm:p-4 border-b border-gray-200 dark:border-gray-500">{{ $salesman['no'] }}
+                            {{-- Menggunakan @forelse untuk menangani kasus jika tidak ada data --}}
+                            @forelse($salesman_goals as $goal)
+                                <tr class="border-b border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700">
+                                    <td class="p-3 sm:p-4">
+                                        {{ $goal['no'] }}
                                     </td>
-                                    <td class="p-3 sm:p-4 border-b border-gray-200 dark:border-gray-500">
-                                        {{ $salesman['branch']->name ?? 'N/A' }}
+                                    <td class="p-3 sm:p-4">
+                                        {{ $goal['branch']->name ?? 'N/A' }}
                                     </td>
-                                    <td class="p-3 sm:p-4 border-b border-gray-200 dark:border-gray-500">
-                                        {{ $salesman['salesman']->name }}
+                                    <td class="p-3 sm:p-4 font-medium">
+                                        {{ $goal['salesman']->name }}
                                     </td>
-                                    <td class="p-3 sm:p-4 border-b border-gray-200 dark:border-gray-500">
-                                        {{ $salesman['total_customers'] }}
+                                    {{-- [DIUBAH] Menampilkan follow_up_count yang benar --}}
+                                    <td class="p-3 sm:p-4 text-center">
+                                        {{ $goal['follow_up_count'] }}
                                     </td>
-                                    <td class="p-3 sm:p-4 border-b border-gray-200 dark:border-gray-500">
-                                        {{ $salesman['follow_up_count'] }}
-                                    </td>
-                                    <td class="p-3 sm:p-4 border-b border-gray-200 dark:border-gray-500">
-                                        {{ $salesman['saved_count'] }}
+                                    {{-- [DIUBAH] Menampilkan saved_count yang benar --}}
+                                    <td class="p-3 sm:p-4 text-center">
+                                        {{ $goal['saved_count'] }}
                                     </td>
                                 </tr>
-                            @endforeach
+                            @empty
+                                {{-- Pesan ini akan muncul jika $salesman_goals kosong --}}
+                                <tr>
+                                    <td colspan="5" class="p-4 text-center">
+                                        Tidak ada data salesman untuk ditampilkan di cabang ini.
+                                    </td>
+                                </tr>
+                            @endforelse
                         </tbody>
                     </table>
                 </div>

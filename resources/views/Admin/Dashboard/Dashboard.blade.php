@@ -104,24 +104,22 @@
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 md:gap-4">
                     <h3 class="text-xl md:text-sm lg:text-2xl font-semibold text-gray-800 dark:text-white">
                         Salesman Goals Bulan <?php
-    $bulan = [
-        1 => 'Januari',
-        2 => 'Februari',
-        3 => 'Maret',
-        4 => 'April',
-        5 => 'Mei',
-        6 => 'Juni',
-        7 => 'Juli',
-        8 => 'Agustus',
-        9 => 'September',
-        10 => 'Oktober',
-        11 => 'November',
-        12 => 'Desember'
-    ];
-
-    $bulan_sekarang = date('n'); // Mendapatkan angka bulan saat ini
-    echo $bulan[$bulan_sekarang]; // Menampilkan nama bulan dalam bahasa Indonesia?>
-
+                        $bulan = [
+                            1 => 'Januari',
+                            2 => 'Februari',
+                            3 => 'Maret',
+                            4 => 'April',
+                            5 => 'Mei',
+                            6 => 'Juni',
+                            7 => 'Juli',
+                            8 => 'Agustus',
+                            9 => 'September',
+                            10 => 'Oktober',
+                            11 => 'November',
+                            12 => 'Desember'
+                        ];
+                        $bulan_sekarang = date('n'); // Mendapatkan angka bulan saat ini
+                        echo $bulan[$bulan_sekarang]; // Menampilkan nama bulan dalam bahasa Indonesia?>
                     </h3>
 
                     <!-- Search and Filter Row -->
@@ -177,45 +175,56 @@
                 <div class="w-full max-w-full overflow-x-auto">
                     <table class="data-table w-full text-left border border-collapse rounded-lg overflow-hidden"
                         id="salesmanTable">
-                        <thead>
-                            <tr class="text-left bg-gray-100 dark:bg-gray-700">
-                                <th class="p-3 sm:p-4 border-b border-gray-200 dark:border-gray-500 font-semibold">
-                                    No
-                                </th>
-                                <th class="p-3 sm:p-4 border-b border-gray-200 dark:border-gray-500 font-semibold">
-                                    Cabang</th>
-                                <th class="p-3 sm:p-4 border-b border-gray-200 dark:border-gray-500 font-semibold">
-                                    Nama</th>
-                                <th class="p-3 sm:p-4 border-b border-gray-200 dark:border-gray-500 font-semibold">
-                                    Saved</th>
-                                <th class="p-3 sm:p-4 border-b border-gray-200 dark:border-gray-500 font-semibold">
-                                    Follow Up</th>
-                            </tr>
-                        </thead>
-                        <tbody id="salesmanTableBody">
-                            @foreach($admin_salesman_goals as $index => $salesman)
-                                <tr
-                                    class="border-b border-gray-200 dark:border-gray-500 hover:bg-gray-50 dark:hover:bg-gray-600">
-                                    <td class="p-3 sm:p-4 border-b border-gray-200 dark:border-gray-500">{{ $salesman['no'] }}
-                                    </td>
-                                    <td class="p-3 sm:p-4 border-b border-gray-200 dark:border-gray-500">
-                                        {{ $salesman['branch']->name ?? 'N/A' }}
-                                    </td>
-                                    <td class="p-3 sm:p-4 border-b border-gray-200 dark:border-gray-500">
-                                        {{ $salesman['salesman']->name }}
-                                    </td>
-                                    <td class="p-3 sm:p-4 border-b border-gray-200 dark:border-gray-500">
-                                        {{ $salesman['total_customers'] }}
-                                    </td>
-                                    <td class="p-3 sm:p-4 border-b border-gray-200 dark:border-gray-500">
-                                        {{ $salesman['saved_count'] }}
-                                    </td>
-                                    <td class="p-3 sm:p-4 border-b border-gray-200 dark:border-gray-500">
-                                        {{ $salesman['follow_up_count'] }}
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
+                        <thead class="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-300">
+            <tr>
+                <th scope="col" class="p-3 sm:p-4 border-b border-gray-200 dark:border-gray-600 font-semibold">
+                    No
+                </th>
+                <th scope="col" class="p-3 sm:p-4 border-b border-gray-200 dark:border-gray-600 font-semibold">
+                    Cabang
+                </th>
+                <th scope="col" class="p-3 sm:p-4 border-b border-gray-200 dark:border-gray-600 font-semibold">
+                    Nama Salesman
+                </th>
+                <th scope="col" class="p-3 sm:p-4 border-b border-gray-200 dark:border-gray-600 font-semibold text-center">
+                    Follow Up
+                </th>
+                <th scope="col" class="p-3 sm:p-4 border-b border-gray-200 dark:border-gray-600 font-semibold text-center">
+                    Saved
+                </th>
+            </tr>
+        </thead>
+        <tbody id="salesmanTableBody">
+            {{-- Loop melalui data salesman goals --}}
+            @forelse($admin_salesman_goals as $goal)
+                <tr class="border-b border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700">
+                    <td class="p-3 sm:p-4">
+                        {{ $goal['no'] }}
+                    </td>
+                    <td class="p-3 sm:p-4">
+                        {{ $goal['branch']->name ?? 'N/A' }}
+                    </td>
+                    <td class="p-3 sm:p-4 font-medium">
+                        {{ $goal['salesman']->name }}
+                    </td>
+                    {{-- [DIUBAH] Menampilkan follow_up_count yang benar --}}
+                    <td class="p-3 sm:p-4 text-center">
+                        {{ $goal['follow_up_count'] }}
+                    </td>
+                    {{-- [DIUBAH] Menampilkan saved_count yang benar --}}
+                    <td class="p-3 sm:p-4 text-center">
+                        {{ $goal['saved_count'] }}
+                    </td>
+                </tr>
+            @empty
+                {{-- Tampilkan pesan jika tidak ada data --}}
+                <tr>
+                    <td colspan="5" class="p-4 text-center">
+                        Tidak ada data salesman untuk ditampilkan.
+                    </td>
+                </tr>
+            @endforelse
+        </tbody>
                     </table>
                 </div>
             </div>

@@ -277,6 +277,8 @@
                                         data-nomor_rangka="{{ $customers->nomor_rangka }}"
                                         data-no_telepon="{{ $customers->nomor_hp_1 }}"
                                         data-no_telepon_update="{{ $customers->nomor_hp_2 }}"
+                                        data-old_salesman="{{ $customers->old_salesman }}"
+                                        data-lease_name="{{ $customers->lease_name }}"
                                         class="px-2 py-1.5 text-xs sm:text-sm flex items-center gap-1 bg-blue-50 hover:bg-blue-100 dark:bg-blue-900/50 dark:hover:bg-blue-900 text-blue-600 dark:text-blue-300 rounded-md border border-blue-200 dark:border-blue-700 transition-colors">
                                         <span class="material-symbols-outlined text-sm">info</span>
                                     </button>

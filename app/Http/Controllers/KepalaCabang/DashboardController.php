@@ -5,6 +5,8 @@ namespace App\Http\Controllers\KepalaCabang;
 use App\Http\Controllers\Controller;
 use App\Models\Branch;
 use App\Models\Customer;
+use App\Models\User;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
@@ -14,100 +16,81 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        // Ambil cabang kepala cabang yang login
+        // 1. Ambil ID cabang dari kepala cabang yang sedang login
         $branchId = auth()->user()->branch_id;
 
-        $allCustomers = Customer::where('branch_id', $branchId)
-            ->with(['branch', 'salesman'])
-            ->orderBy('created_at', 'desc') // Sort by the latest
-            ->get();
+        // Jika kepala cabang tidak memiliki ID cabang, kembalikan data kosong
+        if (!$branchId) {
+            return view('kacab.Dashboard.Dashboard', [
+                'totalAllCustomers' => 0,
+                'invalidCount' => 0,
+                'followUpCount' => 0,
+                'savedCount' => 0,
+                'salesman_goals' => [],
+                'branchName' => 'Tidak ada cabang',
+            ]);
+        }
 
-        // Ambil semua customer yang memiliki salesman dengan cabang yang sesuai dengan cabang kepala cabang yang login
-        $validCustomers = Customer::whereHas('salesman', function ($query) use ($branchId) {
-            $query->where('branch_id', $branchId);  // Pastikan salesman terkait dengan cabang yang sama
-        })
-            ->whereNotIn('progress', ['tidak valid'])
+        // 2. Menghitung data utama (kartu summary) yang spesifik untuk cabang ini
+        $totalAllCustomers = Customer::where('branch_id', $branchId)->count();
+        $invalidCount = Customer::where('branch_id', $branchId)->where('progress', 'tidak valid')->count();
+        
+        // [LOGIKA BARU] Hitung savedCount: saved = 1 DAN progress KOSONG untuk cabang ini
+        $savedCount = Customer::where('branch_id', $branchId)->where('saved', 1)->whereNull('progress')->count();
+
+        // [LOGIKA BARU] Hitung followUpCount: saved = 1 DAN progress TIDAK KOSONG untuk cabang ini
+        $followUpCount = Customer::where('branch_id', $branchId)->where('saved', 1)->whereNotNull('progress')->count();
+
+        // 3. Mengambil statistik per salesman di cabang ini dengan satu query yang efisien
+        $salesmanStats = Customer::query()
+            ->select(
+                'salesman_id',
+                DB::raw('COUNT(*) as total_customers'),
+                // [LOGIKA BARU] Menghitung saved_count per salesman
+                DB::raw("SUM(CASE WHEN saved = 1 AND progress IS NULL THEN 1 ELSE 0 END) as saved_count"),
+                // [LOGIKA BARU] Menghitung follow_up_count per salesman
+                DB::raw("SUM(CASE WHEN saved = 1 AND progress IS NOT NULL THEN 1 ELSE 0 END) as follow_up_count"),
+                DB::raw('MAX(created_at) as latest_customer_date')
+            )
+            // Filter hanya untuk customer yang salesman-nya berada di cabang yang sama
+            ->whereHas('salesman', function ($query) use ($branchId) {
+                $query->where('branch_id', $branchId);
+            })
             ->whereNotNull('salesman_id')
-            ->with(['branch', 'salesman'])
-            ->orderBy('created_at', 'desc')
+            ->groupBy('salesman_id')
+            ->orderBy('latest_customer_date', 'desc')
             ->get();
 
-        // Menghitung total customer
-        $totalAllCustomers = $allCustomers->count();
-        $totalValidCustomers = $validCustomers->count();
-        $invalidCount = $validCustomers->where('progress', 'tidak valid')->count();
+        // 4. Mengambil data model Salesman dan Branch untuk digabungkan
+        $salesmanIds = $salesmanStats->pluck('salesman_id');
+        $salesmen = User::with('branch')->whereIn('id', $salesmanIds)->get()->keyBy('id');
 
-        // Menghitung follow-ups dan saved customers
-        $followUpCount = $validCustomers->whereIn('progress', [ 'DO', 'SPK', 'Pending', 'tidak valid'])->count();
-        $savedCount = $validCustomers->where('saved', 1)->count();
-
-        // Group by salesman dengan perhitungan yang sesuai
+        // 5. Menggabungkan data statistik dengan data model Salesman
         $salesman_goals = [];
-        $salesmanIds = []; // Untuk menjaga urutan salesman
-
-        foreach ($validCustomers as $index => $customer) {
-            $salesman = $customer->salesman;
-            if ($salesman) {
-                if (!isset($salesman_goals[$salesman->id])) {
-                    $salesman_goals[$salesman->id] = [
-                        'no' => count($salesmanIds) + 1, // Nomor urut
-                        'branch' => $salesman->branch,
-                        'salesman' => $salesman,
-                        'total_customers' => 0,
-                        'follow_up_count' => 0,
-                        'saved_count' => 0,
-                        'latest_customer' => $customer->created_at // Untuk sorting
-                    ];
-                    $salesmanIds[] = $salesman->id;
-                }
-
-                // Increment counters
-                $salesman_goals[$salesman->id]['total_customers']++;
-
-                // Count follow-ups
-                if (in_array($customer->progress, ['DO', 'SPK', 'Pending', 'tidak valid'])) {
-                    $salesman_goals[$salesman->id]['follow_up_count']++;
-                }
-
-                // Count saved customers
-                if ($customer->saved == 1) {
-                    $salesman_goals[$salesman->id]['saved_count']++;
-                }
-
-                // Update latest customer date if newer
-                if ($customer->created_at > $salesman_goals[$salesman->id]['latest_customer']) {
-                    $salesman_goals[$salesman->id]['latest_customer'] = $customer->created_at;
-                }
+        foreach ($salesmanStats as $index => $stat) {
+            $salesmanModel = $salesmen->get($stat->salesman_id);
+            if ($salesmanModel) {
+                $salesman_goals[] = [
+                    'no' => $index + 1,
+                    'branch' => $salesmanModel->branch,
+                    'salesman' => $salesmanModel,
+                    'total_customers' => (int) $stat->total_customers,
+                    'saved_count' => (int) $stat->saved_count,
+                    'follow_up_count' => (int) $stat->follow_up_count,
+                ];
             }
         }
+        
+        // Ambil nama cabang untuk ditampilkan di view
+        $branchName = Branch::where('id', $branchId)->value('name');
 
-        // Sort salesmen by latest customer date (newest first)
-        usort($salesman_goals, function ($a, $b) {
-            return $b['latest_customer'] <=> $a['latest_customer'];
-        });
-
-        // Re-number the salesmen after sorting
-        foreach ($salesman_goals as $index => &$salesman) {
-            $salesman['no'] = $index + 1;
-        }
-
-        // Ambil semua cabang untuk filter kota
-        $cities = Branch::select('name as city')
-            ->whereNotNull('name')
-            ->where('id', $branchId) // Hanya ambil cabang yang terkait dengan kepala cabang yang login
-            ->distinct()
-            ->orderBy('name')
-            ->pluck('city');
-
-        // Kirim data ke view
         return view('kacab.Dashboard.Dashboard', compact(
-            'totalAllCustomers',        // Add this variable to the compact() to pass it to the view
-            'totalValidCustomers',
+            'totalAllCustomers',
             'invalidCount',
             'followUpCount',
             'savedCount',
             'salesman_goals',
-            'cities'
+            'branchName' // Mengirim nama cabang saat ini
         ));
     }
 

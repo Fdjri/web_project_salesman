@@ -129,48 +129,56 @@
                             </tr>
                         </thead>
                         <tbody id="SalesmanProgressTableBody">
-                            @foreach($salesmanProgress as $key => $progress)
+                            {{-- [DIUBAH] Loop pada variabel $allSalesmanProgress --}}
+                            @forelse($allSalesmanProgress as $key => $progress)
                                 <tr class="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600">
                                     <!-- Kolom 1: No -->
-                                    <td class="p-2 sm:p-3 border-b border-gray-200 dark:border-gray-600">{{ $key + 1 }}</td>
+                                    <td class="p-2 sm:p-3 border-b border-gray-200 dark:border-gray-600 text-left">{{ $key + 1 }}</td>
 
                                     <!-- Kolom 2: Cabang -->
-                                    <td class="p-2 sm:p-3 border-b border-gray-200 dark:border-gray-600">
+                                    <td class="p-2 sm:p-3 border-b border-gray-200 dark:border-gray-600 text-left">
                                         {{ $progress['branch'] }}</td>
 
                                     <!-- Kolom 3: Nama -->
-                                    <td class="p-2 sm:p-3 border-b border-gray-200 dark:border-gray-600">
+                                    <td class="p-2 sm:p-3 border-b border-gray-200 dark:border-gray-600 text-left">
                                         {{ $progress['salesman'] }}</td>
 
                                     <!-- Kolom 4: Total Follow UP -->
-                                    <td class="p-2 sm:p-3 border-b border-gray-200 dark:border-gray-600">
+                                    <td class="p-2 sm:p-3 border-b border-gray-200 dark:border-gray-600 text-left">
                                         {{ $progress['totalFollowUp'] }}</td>
 
                                     <!-- Kolom 5: Total Kontak -->
-                                    <td class="p-2 sm:p-3 border-b border-gray-200 dark:border-gray-600">
-                                        {{ $progress['totalFollowUp'] }}</td> <!-- Follow Up as Kontak -->
+                                    {{-- [DIUBAH] Menampilkan variabel yang benar --}}
+                                    <td class="p-2 sm:p-3 border-b border-gray-200 dark:border-gray-600 text-left">
+                                        {{ $progress['totalKontak'] }}</td>
 
                                     <!-- Kolom 6: Total Kontak Invalid -->
-                                    <td class="p-2 sm:p-3 border-b border-gray-200 dark:border-gray-600">
-                                        {{ $progress['totalNonValid'] }}</td> <!-- Non Valid as Invalid -->
+                                    <td class="p-2 sm:p-3 border-b border-gray-200 dark:border-gray-600 text-left">
+                                        {{ $progress['totalNonValid'] }}</td>
 
                                     <!-- Kolom 7: Total Progress -->
-                                    <td class="p-2 sm:p-3 border-b border-gray-200 dark:border-gray-600">
+                                    <td class="p-2 sm:p-3 border-b border-gray-200 dark:border-gray-600 text-left">
                                         {{ $progress['progressPercentage'] }}%</td>
 
                                     <!-- Kolom 8: Total SPK -->
-                                    <td class="p-2 sm:p-3 border-b border-gray-200 dark:border-gray-600">
+                                    <td class="p-2 sm:p-3 border-b border-gray-200 dark:border-gray-600 text-left">
                                         {{ $progress['spkPercentage'] }}%</td>
 
                                     <!-- Kolom 9: Total Pending -->
-                                    <td class="p-2 sm:p-3 border-b border-gray-200 dark:border-gray-600">
+                                    <td class="p-2 sm:p-3 border-b border-gray-200 dark:border-gray-600 text-left">
                                         {{ $progress['pendingPercentage'] }}%</td>
 
                                     <!-- Kolom 10: Total Non-valid -->
-                                    <td class="p-2 sm:p-3 border-b border-gray-200 dark:border-gray-600">
+                                    <td class="p-2 sm:p-3 border-b border-gray-200 dark:border-gray-600 text-left">
                                         {{ $progress['nonValidPercentage'] }}%</td>
                                 </tr>
-                            @endforeach
+                            @empty
+                                <tr>
+                                    <td colspan="10" class="p-4 text-center text-gray-500 dark:text-gray-400">
+                                        Tidak ada data laporan untuk ditampilkan.
+                                    </td>
+                                </tr>
+                            @endforelse
                         </tbody>
                     </table>
                 </div>

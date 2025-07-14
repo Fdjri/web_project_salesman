@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Customer;
 use App\Models\User;
 use App\Models\Branch;
+use Illuminate\Support\Facades\DB;
 use App\Exports\SalesmanProgressExport;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Http\Request;
@@ -17,40 +18,42 @@ class LaporanController extends Controller
      */
     public function index(Request $request)
     {
-        // Get the logged-in salesman
-        $salesman = auth()->user(); // This gets the logged-in salesman
+        $salesman = auth()->user();
 
-        // Initialize counters for the different statuses
-        $totalFollowUp = 0;
-        $totalSPK = 0;
-        $totalPending = 0;
-        $totalNonValid = 0;
+        // 1. Menggunakan satu query untuk mengambil semua statistik customer milik salesman ini
+        $stats = Customer::query()
+            ->select(
+                // Menghitung total customer (total kontak)
+                DB::raw('COUNT(*) as total_customers'),
+                // Menghitung total yang sudah di-follow up (progress tidak kosong)
+                DB::raw("SUM(CASE WHEN progress IS NOT NULL THEN 1 ELSE 0 END) as total_follow_up"),
+                // Menghitung total SPK
+                DB::raw("SUM(CASE WHEN progress = 'SPK' THEN 1 ELSE 0 END) as total_spk"),
+                // Menghitung total Pending
+                DB::raw("SUM(CASE WHEN progress = 'pending' THEN 1 ELSE 0 END) as total_pending"),
+                // Menghitung total Tidak Valid (termasuk reject)
+                DB::raw("SUM(CASE WHEN progress IN ('tidak valid', 'reject') THEN 1 ELSE 0 END) as total_non_valid")
+            )
+            ->where('salesman_id', $salesman->id)
+            ->first(); // Gunakan first() karena kita hanya mengambil data untuk satu salesman
 
-        // Process the customer's data
-        foreach ($salesman->customers as $customer) {
-            // Count total customers and their statuses
-            $totalFollowUp++;
-            if ($customer->progress == 'SPK') {
-                $totalSPK++;
-            }
-            if ($customer->progress == 'pending') {
-                $totalPending++;
-            }
-            if ($customer->progress == 'invalid') {
-            $totalNonValid++;
-            }
-        }
+        // 2. Kalkulasi persentase dari hasil query
+        $totalCustomers = $stats->total_customers ?? 0;
+        $totalFollowUp = $stats->total_follow_up ?? 0;
+        $totalSPK = $stats->total_spk ?? 0;
+        $totalPending = $stats->total_pending ?? 0;
+        $totalNonValid = $stats->total_non_valid ?? 0;
 
-        // Calculate percentages
-        $progressPercentage = $totalFollowUp > 0 ? ($totalFollowUp / $totalFollowUp) * 100 : 0;
+        $progressPercentage = $totalCustomers > 0 ? ($totalFollowUp / $totalCustomers) * 100 : 0;
         $spkPercentage = $totalFollowUp > 0 ? ($totalSPK / $totalFollowUp) * 100 : 0;
         $pendingPercentage = $totalFollowUp > 0 ? ($totalPending / $totalFollowUp) * 100 : 0;
         $nonValidPercentage = $totalFollowUp > 0 ? ($totalNonValid / $totalFollowUp) * 100 : 0;
 
-        // Prepare the data to send to the view
+        // 3. Menyiapkan data untuk dikirim ke view
         $salesmanProgress = [
             'salesman' => $salesman->name,
-            'branch' => $salesman->customers->first()->branch->name ?? 'N/A', // Get the branch from the first customer
+            'branch' => $salesman->branch->name ?? 'N/A',
+            'totalKontak' => $totalCustomers,
             'totalFollowUp' => $totalFollowUp,
             'totalSPK' => $totalSPK,
             'totalPending' => $totalPending,
@@ -60,11 +63,10 @@ class LaporanController extends Controller
             'pendingPercentage' => round($pendingPercentage, 2),
             'nonValidPercentage' => round($nonValidPercentage, 2),
         ];
-
-        // Get all branches for the dropdown filter (optional)
+        
+        // Ambil data cabang untuk filter (jika ada)
         $branches = Branch::all();
-
-        // Return the data to the view
+        
         return view('Salesman.Laporan.Laporan', compact('salesmanProgress', 'branches'));
     }
 
