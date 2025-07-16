@@ -41,6 +41,8 @@ class Customer extends Model
     ];
 
     protected $casts = [
+        'tanggal_lahir' => 'date',
+        'tanggal_gatepass' => 'date',
         'saved' => 'boolean',
         'deleted_at' => 'datetime',
     ];
