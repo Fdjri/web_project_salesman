@@ -691,35 +691,35 @@
     }
 
     function openTampilData(button) {
-        // Ambil nilai dari atribut data
-        document.getElementById("progress").value = button.dataset.progress || '';
-        document.getElementById("alasan").value = button.dataset.alasan || '';
-        document.getElementById("cabang").value = button.dataset.cabang || '';
-        document.getElementById("salesman").value = button.dataset.salesman || '';
-        document.getElementById("sumber_data").value = button.dataset.sumber_data || '';
-        document.getElementById("nama").value = button.dataset.customer || '';
-        document.getElementById("alamat").value = button.dataset.alamat || '';
-        document.getElementById("kelurahan").value = button.dataset.kelurahan || '';
-        document.getElementById("kecamatan").value = button.dataset.kecamatan || '';
-        document.getElementById("kota").value = button.dataset.kota || '';
-        document.getElementById("agama").value = button.dataset.agama || '';
-        document.getElementById("tgl_lahir").value = button.dataset.tanggal_lahir || '';
-        document.getElementById("jenis_kelamin").value = button.dataset.jenis_kelamin || '';
-        document.getElementById("tipe_pelanggan").value = button.dataset.tipe_pelanggan || '';
-        document.getElementById("jenis_pelanggan").value = button.dataset.jenis_pelanggan || '';
-        document.getElementById("tenor").value = button.dataset.tenor || '';
-        document.getElementById("tgl_gatepass").value = button.dataset.tanggal_gatepass || '';
-        document.getElementById("pekerjaan").value = button.dataset.pekerjaan || '';
-        document.getElementById("jenis_kendaraan").value = button.dataset.jenis_kendaraan || '';
-        document.getElementById("no_rangka").value = button.dataset.nomor_rangka || '';
-        document.getElementById("no_telepon").value = button.dataset.no_telepon || '';
-        document.getElementById("no_telepon_update").value = button.dataset.no_telepon_update || '';
-        document.getElementById("old_salesman").value = button.dataset.old_salesman || '';
-        document.getElementById("lease_name").value = button.dataset.lease_name || '';
+    // Ambil nilai dari atribut data
+    document.getElementById("progress").value = button.dataset.progress || '';
+    document.getElementById("alasan").value = button.dataset.alasan || '';
+    document.getElementById("cabang").value = button.dataset.cabang || '';
+    document.getElementById("salesman").value = button.dataset.salesman || '';
+    document.getElementById("sumber_data").value = button.dataset.sumber_data || '';
+    document.getElementById("nama").value = button.dataset.customer || '';
+    document.getElementById("alamat").value = button.dataset.alamat || '';
+    document.getElementById("kelurahan").value = button.dataset.kelurahan || '';
+    document.getElementById("kecamatan").value = button.dataset.kecamatan || '';
+    document.getElementById("kota").value = button.dataset.kota || '';
+    document.getElementById("agama").value = button.dataset.agama || '';
+    document.getElementById("tgl_lahir").value = button.dataset.tanggal_lahir || '';
+    document.getElementById("jenis_kelamin").value = button.dataset.jenis_kelamin || '';
+    document.getElementById("tipe_pelanggan").value = button.dataset.tipe_pelanggan || '';
+    document.getElementById("jenis_pelanggan").value = button.dataset.jenis_pelanggan || '';
+    document.getElementById("tenor").value = button.dataset.tenor || '';
+    document.getElementById("tgl_gatepass").value = button.dataset.tanggal_gatepass || '';
+    document.getElementById("pekerjaan").value = button.dataset.pekerjaan || '';
+    document.getElementById("jenis_kendaraan").value = button.dataset.jenis_kendaraan || '';
+    document.getElementById("no_rangka").value = button.dataset.nomor_rangka || '';
+    document.getElementById("no_telepon").value = button.dataset.no_telepon || '';
+    document.getElementById("no_telepon_update").value = button.dataset.no_telepon_update || '';
+    document.getElementById("old_salesman").value = button.dataset.old_salesman || '';
+    document.getElementById("lease_name").value = button.dataset.lease_name || '';
 
-        // Tampilkan modal
-        document.getElementById("TampilDataModal").classList.remove("hidden");
-    }
+    // Tampilkan modal
+    document.getElementById("TampilDataModal").classList.remove("hidden");
+}
 
     function closeTampilData() {
         document.getElementById("TampilDataModal").classList.add("hidden");

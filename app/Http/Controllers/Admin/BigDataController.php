@@ -8,6 +8,7 @@ use App\Models\Branch;
 use App\Models\Customer;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB; // <-- Tambahkan baris ini
 use Maatwebsite\Excel\Facades\Excel;
 
 class BigDataController extends Controller
@@ -22,14 +23,16 @@ class BigDataController extends Controller
         $branches = Branch::all();
 
         $salesmen = User::where('role', 'salesman')
-                ->orderBy('name', 'asc')
-                ->get();
+            ->orderBy('name', 'asc')
+            ->get();
 
         // Ambil daftar kota yang ada di database secara unik
         $cities = Customer::select('kota')->distinct()->get();
 
-        // Ambil data dari model AdminSalesmanGoals
-        $customers = Customer::with(['branch', 'salesman'])->get();
+        // Ambil data customer dan format kolom tanggal
+        $customers = Customer::with(['branch', 'salesman'])
+            ->selectRaw("*, DATE_FORMAT(tanggal_lahir, '%Y-%m-%d') as tanggal_lahir, DATE_FORMAT(tanggal_gatepass, '%Y-%m-%d') as tanggal_gatepass")
+            ->get();
 
         return view('Admin.BigData.bigdata', compact('branches', 'cities', 'customers', 'salesmen', 'agama'));
     }
@@ -39,7 +42,7 @@ class BigDataController extends Controller
      */
     public function create(Request $request)
     {
-       //
+        //
     }
 
     /**

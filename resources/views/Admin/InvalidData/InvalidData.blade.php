@@ -210,7 +210,7 @@
 
                                     <!-- Kolom 5: Tgl Lahir -->
                                     <td class="p-2 sm:p-3 border-b border-gray-200 dark:border-gray-600">
-                                        {{ $customers->tanggal_lahir }}
+                                        {{ $customers->tanggal_lahir ? $customers->tanggal_lahir->format('d/m/Y') : '-' }}
                                     </td> <!-- NoHp1 -->
 
                                     <!-- Kolom 6: Jenis NoHp2 -->

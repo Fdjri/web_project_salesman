@@ -181,7 +181,7 @@
 
                                     <!-- Kolom 5: Tgl Lahir -->
                                     <td class="p-2 sm:p-3 border-b border-gray-200 dark:border-gray-600">
-                                        {{ \Carbon\Carbon::parse($customer->tanggal_lahir)->format('d-m-Y') }}
+                                        {{ $customer->tanggal_lahir ? $customer->tanggal_lahir->format('d-m-Y') : '-' }}
                                     </td>
 
                                     <!-- Kolom 6: Jenis Kendaraan -->

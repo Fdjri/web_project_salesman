@@ -218,83 +218,86 @@
                         </tr>
                     </thead>
                     <tbody id="customerTableBody">
-                        @foreach ($customers as $customers)
-                        <tr class="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors">
-                            <td class="p-2 sm:p-3 border-b border-gray-200 dark:border-gray-600">{{ $customers->id }}</td>
-                            <td class="p-2 sm:p-3 border-b border-gray-200 dark:border-gray-600">{{ $customers->branch->name ?? '' }}</td>
-                            <td class="p-2 sm:p-3 border-b border-gray-200 dark:border-gray-600">{{ $customers->nama }}</td>
-                            <td class="p-2 sm:p-3 border-b border-gray-200 dark:border-gray-600">{{ $customers->kota }}</td>
-                            <td class="p-2 sm:p-3 border-b border-gray-200 dark:border-gray-600">{{ $customers->kecamatan }}</td>
-                            <td class="p-2 sm:p-3 border-b border-gray-200 dark:border-gray-600">{{ $customers->tanggal_lahir }}</td>
-                            <td class="p-2 sm:p-3 border-b border-gray-200 dark:border-gray-600">{{ $customers->agama }}</td>
-                            <td class="p-2 sm:p-3 border-b border-gray-200 dark:border-gray-600">{{ $customers->model_mobil }}</td>
-                            <td class="p-2 sm:p-3 border-b border-gray-200 dark:border-gray-600">{{ $customers->jenis_pelanggan }}</td>
-                            <td class="p-2 sm:p-3 border-b border-gray-200 dark:border-gray-600">{{ $customers->old_salesman }}
-                            <td class="p-2 sm:p-3 border-b border-gray-200 dark:border-gray-600">
-                                @if ($customers->progress)
-                                @php
-                                $colorClasses = match($customers->progress) {
-                                'SPK' => 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
-                                'DO' => 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
-                                'pending' => 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200',
-                                'reject' => 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',
-                                'tidak valid' => 'bg-gray-500 text-white dark:bg-gray-700 dark:text-gray-100',
-                                default => '' //tidak ada
-                                };
-                                @endphp
-                                <span class="px-2 py-1 text-xs rounded-full {{ $colorClasses }}">
-                                    {{ $customers->progress }}
-                                </span>
-                                @endif
-                            </td>
+    @foreach ($customers as $customer)
+    <tr class="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors">
+        <td class="p-2 sm:p-3 border-b border-gray-200 dark:border-gray-600">{{ $loop->iteration }}</td>
+        <td class="p-2 sm:p-3 border-b border-gray-200 dark:border-gray-600">{{ $customer->branch->name ?? '' }}</td>
+        <td class="p-2 sm:p-3 border-b border-gray-200 dark:border-gray-600">{{ $customer->nama }}</td>
+        <td class="p-2 sm:p-3 border-b border-gray-200 dark:border-gray-600">{{ $customer->kota }}</td>
+        <td class="p-2 sm:p-3 border-b border-gray-200 dark:border-gray-600">{{ $customer->kecamatan }}</td>
+        <td class="p-2 sm:p-3 border-b border-gray-200 dark:border-gray-600">{{ $customer->tanggal_lahir ? $customer->tanggal_lahir->format('d/m/Y') : '-' }}</td>
+        <td class="p-2 sm:p-3 border-b border-gray-200 dark:border-gray-600">{{ $customer->agama }}</td>
+        <td class="p-2 sm:p-3 border-b border-gray-200 dark:border-gray-600">{{ $customer->model_mobil }}</td>
+        <td class="p-2 sm:p-3 border-b border-gray-200 dark:border-gray-600">{{ $customer->jenis_pelanggan }}</td>
+        
+        {{-- PERBAIKAN: Menambahkan tag penutup </td> --}}
+        <td class="p-2 sm:p-3 border-b border-gray-200 dark:border-gray-600">{{ $customer->old_salesman }}</td>
 
-                            @php
-                            $alasan = $customers->alasan === 'N/A' || is_null($customers->alasan) ? 'no reason' : $customers->alasan;
-                            @endphp
-                            <td class="p-2 sm:p-3 border-b border-gray-200 dark:border-gray-600">{{ $alasan }}</td>
-                            <td class="p-2 sm:p-3 border-b border-gray-200 dark:border-gray-600 whitespace-nowrap">
-                                <div class="flex items-center gap-2">
-                                    <button onclick="openTampilData(this)"
-                                        data-progress="{{ $customers->progress }}"
-                                        data-alasan="{{ $customers->alasan }}"
-                                        data-cabang="{{ $customers->branch->name ?? '' }}"
-                                        data-salesman="{{ $customers->salesman->name ?? '' }}"
-                                        data-sumber_data="{{ $customers->sumber_data }}"
-                                        data-customer="{{ $customers->nama }}"
-                                        data-alamat="{{ $customers->alamat }}"
-                                        data-kelurahan="{{ $customers->kelurahan }}"
-                                        data-kecamatan="{{ $customers->kecamatan }}"
-                                        data-kota="{{ $customers->kota }}"
-                                        data-agama="{{ $customers->agama }}"
-                                        data-tanggal_lahir="{{ $customers->tanggal_lahir }}"
-                                        data-jenis_kelamin="{{ $customers->jenis_kelamin }}"
-                                        data-tipe_pelanggan="{{ $customers->tipe_pelanggan }}"
-                                        data-jenis_pelanggan="{{ $customers->jenis_pelanggan }}"
-                                        data-tenor="{{ $customers->tenor }}"
-                                        data-tanggal_gatepass="{{ $customers->tanggal_gatepass }}"
-                                        data-pekerjaan="{{ $customers->pekerjaan }}"
-                                        data-jenis_kendaraan="{{ $customers->model_mobil }}"
-                                        data-nomor_rangka="{{ $customers->nomor_rangka }}"
-                                        data-no_telepon="{{ $customers->nomor_hp_1 }}"
-                                        data-no_telepon_update="{{ $customers->nomor_hp_2 }}"
-                                        data-old_salesman="{{ $customers->old_salesman }}"
-                                        data-lease_name="{{ $customers->lease_name }}"
-                                        class="px-2 py-1.5 text-xs sm:text-sm flex items-center gap-1 bg-blue-50 hover:bg-blue-100 dark:bg-blue-900/50 dark:hover:bg-blue-900 text-blue-600 dark:text-blue-300 rounded-md border border-blue-200 dark:border-blue-700 transition-colors">
-                                        <span class="material-symbols-outlined text-sm">info</span>
-                                    </button>
-                                    <form action="{{ route('admin.customer.destroy', $customers->id) }}" method="POST" class="delete-customer-form">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit"
-                                            class="px-2 py-1.5 text-xs sm:text-sm flex items-center gap-1 bg-red-50 hover:bg-red-100 dark:bg-red-900/50 dark:hover:bg-red-900 text-red-600 dark:text-red-300 rounded-md border border-red-200 dark:border-red-700 transition-colors">
-                                            <span class="material-symbols-outlined text-sm">delete</span>
-                                        </button>
-                                    </form>
-                                </div>
-                            </td>
-                        </tr>
-                        @endforeach
-                    </tbody>
+        <td class="p-2 sm:p-3 border-b border-gray-200 dark:border-gray-600">
+            @if ($customer->progress)
+            @php
+            $colorClasses = match($customer->progress) {
+                'SPK' => 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
+                'DO' => 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
+                'pending' => 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200',
+                'reject' => 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',
+                'tidak valid' => 'bg-gray-500 text-white dark:bg-gray-700 dark:text-gray-100',
+                default => ''
+            };
+            @endphp
+            <span class="px-2 py-1 text-xs rounded-full {{ $colorClasses }}">
+                {{ $customer->progress }}
+            </span>
+            @endif
+        </td>
+
+        @php
+        $alasan = $customer->alasan === 'N/A' || is_null($customer->alasan) ? 'no reason' : $customer->alasan;
+        @endphp
+        <td class="p-2 sm:p-3 border-b border-gray-200 dark:border-gray-600">{{ $alasan }}</td>
+        <td class="p-2 sm:p-3 border-b border-gray-200 dark:border-gray-600 whitespace-nowrap">
+            <div class="flex items-center gap-2">
+                <button onclick="openTampilData(this)"
+                    data-progress="{{ $customer->progress }}"
+                    data-alasan="{{ $customer->alasan }}"
+                    data-cabang="{{ $customer->branch->name ?? '' }}"
+                    data-salesman="{{ $customer->salesman->name ?? '' }}"
+                    data-sumber_data="{{ $customer->sumber_data }}"
+                    data-customer="{{ $customer->nama }}"
+                    data-alamat="{{ $customer->alamat }}"
+                    data-kelurahan="{{ $customer->kelurahan }}"
+                    data-kecamatan="{{ $customer->kecamatan }}"
+                    data-kota="{{ $customer->kota }}"
+                    data-agama="{{ $customer->agama }}"
+                    data-tanggal_lahir="{{ $customer->tanggal_lahir ? $customer->tanggal_lahir->format('Y-m-d') : '' }}"
+                    data-jenis_kelamin="{{ $customer->jenis_kelamin }}"
+                    data-tipe_pelanggan="{{ $customer->tipe_pelanggan }}"
+                    data-jenis_pelanggan="{{ $customer->jenis_pelanggan }}"
+                    data-tenor="{{ $customer->tenor }}"
+                    data-tanggal_gatepass="{{ $customer->tanggal_gatepass ? $customer->tanggal_gatepass->format('Y-m-d') : '' }}"
+                    data-pekerjaan="{{ $customer->pekerjaan }}"
+                    data-jenis_kendaraan="{{ $customer->model_mobil }}"
+                    data-nomor_rangka="{{ $customer->nomor_rangka }}"
+                    data-no_telepon="{{ $customer->nomor_hp_1 }}"
+                    data-no_telepon_update="{{ $customer->nomor_hp_2 }}"
+                    data-old_salesman="{{ $customer->old_salesman }}"
+                    data-lease_name="{{ $customer->lease_name }}"
+                    class="px-2 py-1.5 text-xs sm:text-sm flex items-center gap-1 bg-blue-50 hover:bg-blue-100 dark:bg-blue-900/50 dark:hover:bg-blue-900 text-blue-600 dark:text-blue-300 rounded-md border border-blue-200 dark:border-blue-700 transition-colors">
+                    <span class="material-symbols-outlined text-sm">info</span>
+                </button>
+                <form action="{{ route('admin.customer.destroy', $customer->id) }}" method="POST" class="delete-customer-form">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit"
+                        class="px-2 py-1.5 text-xs sm:text-sm flex items-center gap-1 bg-red-50 hover:bg-red-100 dark:bg-red-900/50 dark:hover:bg-red-900 text-red-600 dark:text-red-300 rounded-md border border-red-200 dark:border-red-700 transition-colors">
+                        <span class="material-symbols-outlined text-sm">delete</span>
+                    </button>
+                </form>
+            </div>
+        </td>
+    </tr>
+    @endforeach
+</tbody>
                 </table>
             </div>
         </div>
@@ -432,9 +435,7 @@
 
             <!-- Form Input Fields -->
             <form class="space-y-4">
-                <!-- Use grid layout for better organization -->
                 <div class="flex flex-col gap-6 md:grid md:grid-cols-2 lg:grid-cols-4">
-                    <!-- Progress -->
                     <div class="mb-4">
                         <label for="progress"
                             class="block text-sm font-medium text-gray-700 dark:text-gray-300">Progress</label>
@@ -521,7 +522,6 @@
                             class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-gray-700 dark:text-gray-200 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-800 dark:focus:ring-indigo-500 dark:focus:border-indigo-500"
                             placeholder="N/A">
                     </div>
-                    <!-- Gender (Dropdown) -->
                     <div class="mb-4">
                         <label for="jenis_kelamin"
                             class="block text-sm font-medium text-gray-700 dark:text-gray-300">Jenis Kelamin</label>
@@ -605,7 +605,7 @@
                         <label for="old_salesman"
                             class="block text-sm font-medium text-gray-700 dark:text-gray-300">Old
                             Salesman</label>
-                        <input disabled type="number" id="old_salesman" name="old_salesman"
+                        <input disabled type="text" id="old_salesman" name="old_salesman"
                             class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-gray-700 dark:text-gray-200 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-800 dark:focus:ring-indigo-500 dark:focus:border-indigo-500"
                             placeholder="N/A">
                     </div>
