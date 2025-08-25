@@ -29,12 +29,10 @@ class BigDataController extends Controller
         // Ambil daftar kota yang ada di database secara unik
         $cities = Customer::select('kota')->distinct()->get();
 
-        // Ambil data customer dan format kolom tanggal
-        $customers = Customer::with(['branch', 'salesman'])
-            ->selectRaw("*, DATE_FORMAT(tanggal_lahir, '%Y-%m-%d') as tanggal_lahir, DATE_FORMAT(tanggal_gatepass, '%Y-%m-%d') as tanggal_gatepass")
-            ->get();
+        // Ambil data customer
+        $customers = Customer::with(['branch', 'salesman'])->get();
 
-        return view('Admin.BigData.bigdata', compact('branches', 'cities', 'customers', 'salesmen', 'agama'));
+        return view('Admin.BigData.BigData', compact('branches', 'cities', 'customers', 'salesmen', 'agama'));
     }
 
     /**
